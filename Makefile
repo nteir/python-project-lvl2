@@ -9,3 +9,9 @@ package-install:
 
 make lint:
 	poetry run flake8 gendiff
+
+make test:
+	poetry run pytest
+
+make test-cov:
+	poetry run pytest --cov=gendiff tests/ --cov-report xml
