@@ -14,11 +14,15 @@ def generate_diff(file_path1, file_path2):
     result = '{\n'
     for key in sorted(keys_superset):
         indent = INDENT_CHAR * INDENT_REPEAT
-        sign1 = ' ' if f1.get(key) == f2.get(key) else '-'    # ' ' for same value, '-' for any difference
-        sign2 = '+'                                           # don't show in results for same value, '+' for any difference
-        if key in f1:                                         # it's in f1, show always
+        # ' ' for same value, '-' for any difference
+        sign1 = ' ' if f1.get(key) == f2.get(key) else '-'
+        # don't show in results for same value, '+' for any difference
+        sign2 = '+'
+        # it's in f1, show always
+        if key in f1:
             result += f'{indent}{sign1} {key}: {bool_to_str(f1[key])}\n'
-        if key in f2 and f1.get(key) != f2.get(key):          # it's in f2, only show if the values differ
+        # it's in f2, only show if the values differ
+        if key in f2 and f1.get(key) != f2.get(key):
             result += f'{indent}{sign2} {key}: {bool_to_str(f2[key])}\n'
     result += '}'
     return result

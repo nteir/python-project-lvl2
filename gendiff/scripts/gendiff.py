@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import gendiff.logic.gendiff
+from gendiff.logic.gendiff import generate_diff
 import argparse
 
 
@@ -11,7 +11,7 @@ def main():
     parser.add_argument("first_file")
     parser.add_argument("second_file")
     args = parser.parse_args()
-    print(gendiff.logic.gendiff.generate_diff(args.first_file, args.second_file))
+    print(generate_diff(args.first_file, args.second_file))
 
 
 if __name__ == '__main__':
