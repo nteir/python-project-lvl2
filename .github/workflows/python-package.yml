@@ -43,7 +43,5 @@ jobs:
       run: |
         make test-cov
     - name: Send coverage report
-      env:
-        GITHUB_TOKEN: $({ secrets.CC_TEST_REPORTER_ID })
       run: |
-        ./cc-test-reporter after-build -r "$GITHUB_TOKEN"
+        ./cc-test-reporter after-build
