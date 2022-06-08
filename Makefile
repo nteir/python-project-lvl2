@@ -7,11 +7,13 @@ build:
 package-install:
 	python3 -m pip install --user --force dist/*.whl
 
-make lint:
+lint:
 	poetry run flake8 gendiff
 
-make test:
+test:
 	poetry run pytest
 
-make test-cov:
+test-cov:
 	poetry run pytest --cov=gendiff tests/ --cov-report xml
+
+.PHONY: install build package-install lint test test-cov

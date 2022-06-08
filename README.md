@@ -5,3 +5,4 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7b83d284d0163bae3f52/test_coverage)](https://codeclimate.com/github/nteir/python-project-lvl2/test_coverage)
 
 [![asciicast](https://asciinema.org/a/WF7NosMdqc3zf3rHebEDy0cBu.svg)](https://asciinema.org/a/WF7NosMdqc3zf3rHebEDy0cBu)
+[![asciicast](https://asciinema.org/a/Jd74CUaDryvTL3MOrckEkuIzk.svg)](https://asciinema.org/a/Jd74CUaDryvTL3MOrckEkuIzk)
