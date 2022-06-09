@@ -11,39 +11,43 @@ STYLISH_CONST = {
 
 
 def stylish(diff):
-    diff_string = ""
+
     def build_node_string(node, deapth=0):
-        indent_count = STYLISH_CONST['indent_initial'] + STYLISH_CONST['indent_repeat'] * deapth
-        indent = STYLISH_CONST['indent_char'] * indent_count
         indent_count = STYLISH_CONST['indent_repeat'] * deapth
-        indent2 = STYLISH_CONST['indent_char'] * indent_count
+        indent = STYLISH_CONST['indent_char'] * indent_count
         res = "{\n"
         for key, val in sorted(node.items()):
             strings = ''
             if isinstance(val, dict):
                 node_type = val['type']
-                if node_type == 'unchanged':
-                    value = build_node_string(val['value'], deapth+1) if isinstance(val['value'], dict) else cast_type(val['value'])
-                    strings = f"{indent}{STYLISH_CONST['unchanged']} {key}: {value}\n"
-                elif node_type == 'changed':
-                    value1 = build_node_string(val['value1'], deapth+1) if isinstance(val['value1'], dict) else cast_type(val['value1'])
-                    value2 = build_node_string(val['value2'], deapth+1) if isinstance(val['value2'], dict) else cast_type(val['value2'])
-                    strings = f"{indent}{STYLISH_CONST['removed']} {key}: {value1}\n"
-                    strings += f"{indent}{STYLISH_CONST['added']} {key}: {value2}\n"
-                elif node_type == 'removed':
-                    value = build_node_string(val['value'], deapth+1) if isinstance(val['value'], dict) else cast_type(val['value'])
-                    strings = f"{indent}{STYLISH_CONST['removed']} {key}: {value}\n"
-                elif node_type == 'added':
-                    value = build_node_string(val['value'], deapth+1) if isinstance(val['value'], dict) else cast_type(val['value'])
-                    strings = f"{indent}{STYLISH_CONST['added']} {key}: {value}\n"
-                elif node_type == 'parent':
-                    value = build_node_string(val['value'], deapth+1)
-                    strings = f"{indent}{STYLISH_CONST['parent']} {key}: {value}\n"
+                if node_type == 'changed':
+                    value = build_node_string(
+                        val['value1'], deapth + 1
+                    ) if isinstance(val['value1'], dict) else val['value1']
+                    strings = get_node_string('removed', key, value, deapth)
+                    value = build_node_string(
+                        val['value2'], deapth + 1
+                    ) if isinstance(val['value2'], dict) else val['value2']
+                    strings += get_node_string('added', key, value, deapth)
+                else:
+                    value = build_node_string(
+                        val['value'], deapth + 1
+                    ) if isinstance(val['value'], dict) else val['value']
+                    strings = get_node_string(node_type, key, value, deapth)
             res += strings
-        res += f'{indent2}}}'
+        res += f'{indent}}}'
         return res
     diff_string = build_node_string(diff)
     return diff_string
+
+
+def get_node_string(node_type, key, value, deapth=0):
+    indent_count = STYLISH_CONST['indent_repeat'] * deapth
+    indent_count = STYLISH_CONST['indent_initial'] + indent_count
+    indent = STYLISH_CONST['indent_char'] * indent_count
+    if not isinstance(value, dict):
+        value = cast_type(value)
+    return f"{indent}{STYLISH_CONST[node_type]} {key}: {value}\n"
 
 
 def cast_type(value):

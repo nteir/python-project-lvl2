@@ -4,7 +4,7 @@ def generate_node(data1, data2, key, parent_flag=False):
     node = {}
     value1 = data1.get(key)
     value2 = data2.get(key)
-    if parent_flag == True:
+    if parent_flag:
         node['type'] = 'unchanged'
         node['value'] = generate_internal_diff(value1, {}, parent_flag=True) if isinstance(value1, dict) else value1
     else:
