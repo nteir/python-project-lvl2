@@ -10,38 +10,45 @@ STYLISH_CONST = {
 }
 
 
-def stylish(diff):
-
-    def build_node_string(node, deapth=0):
-        indent_count = STYLISH_CONST['indent_repeat'] * deapth
-        indent = STYLISH_CONST['indent_char'] * indent_count
-        res = "{\n"
-        for key, val in sorted(node.items()):
-            strings = ''
-            if isinstance(val, dict):
-                node_type = val['type']
-                if node_type == 'changed':
-                    value = build_node_string(
-                        val['value1'], deapth + 1
-                    ) if isinstance(val['value1'], dict) else val['value1']
-                    strings = get_node_string('removed', key, value, deapth)
-                    value = build_node_string(
-                        val['value2'], deapth + 1
-                    ) if isinstance(val['value2'], dict) else val['value2']
-                    strings += get_node_string('added', key, value, deapth)
-                else:
-                    value = build_node_string(
-                        val['value'], deapth + 1
-                    ) if isinstance(val['value'], dict) else val['value']
-                    strings = get_node_string(node_type, key, value, deapth)
-            res += strings
-        res += f'{indent}}}'
-        return res
-    diff_string = build_node_string(diff)
-    return diff_string
+def stylish(node, deapth=0):
+    indent_count = STYLISH_CONST['indent_repeat'] * deapth
+    indent = STYLISH_CONST['indent_char'] * indent_count
+    result = "{\n"
+    for key, val in sorted(node.items()):
+        node_type = val.get('type')
+        if node_type == 'parent':
+            value = val.get('value')    # is dict, has type
+            value = stylish(value, deapth + 1)
+            result += get_value_string(node_type, key, value, deapth)
+        elif node_type == 'changed':
+            value = stringify_dict(val.get('value1'), deapth)
+            result += get_value_string('removed', key, value, deapth)
+            value = stringify_dict(val.get('value2'), deapth)
+            result += get_value_string('added', key, value, deapth)
+        else:
+            value = stringify_dict(val.get('value'), deapth)
+            result += get_value_string(node_type, key, value, deapth)
+    result += f'{indent}}}'
+    return result
 
 
-def get_node_string(node_type, key, value, deapth=0):
+def stringify_dict(data, deapth):
+    if not isinstance(data, dict):
+        return data
+    indent_count = STYLISH_CONST['indent_repeat'] * (deapth + 1)
+    indent = STYLISH_CONST['indent_char'] * indent_count
+    result = '{\n'
+    for key, val in data.items():
+        if isinstance(val, dict):
+            strings = stringify_dict(val, deapth + 1)
+        else:
+            strings = val
+        result += get_value_string('unchanged', key, strings, deapth + 1)
+    result += f'{indent}}}'
+    return result
+
+
+def get_value_string(node_type, key, value, deapth=0):
     indent_count = STYLISH_CONST['indent_repeat'] * deapth
     indent_count = STYLISH_CONST['indent_initial'] + indent_count
     indent = STYLISH_CONST['indent_char'] * indent_count
