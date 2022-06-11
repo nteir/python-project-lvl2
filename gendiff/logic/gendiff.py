@@ -1,7 +1,7 @@
 import os.path
 from gendiff.logic.data_parser import parse_to_dict
 import gendiff.logic.generator
-from gendiff.logic.formatter import stylish
+from gendiff.formats import stylish
 
 INDENT_CHAR = ' '
 INDENT_REPEAT = 2
@@ -25,5 +25,5 @@ def generate_diff(file_path1, file_path2, format='stylish'):
     f1 = get_data(file_path1)
     f2 = get_data(file_path2)
     diff = gendiff.logic.generator.generate_internal_diff(f1, f2)
-    result = FORMATS[format](diff)
+    result = FORMATS[format].format(diff)
     return result

@@ -10,7 +10,7 @@ STYLISH_CONST = {
 }
 
 
-def stylish(node, deapth=0):
+def format(node, deapth=0):
     indent_count = STYLISH_CONST['indent_repeat'] * deapth
     indent = STYLISH_CONST['indent_char'] * indent_count
     result = "{\n"
@@ -18,7 +18,7 @@ def stylish(node, deapth=0):
         node_type = val.get('type')
         if node_type == 'parent':
             value = val.get('value')    # is dict, has type
-            value = stylish(value, deapth + 1)
+            value = format(value, deapth + 1)
             result += get_value_string(node_type, key, value, deapth)
         elif node_type == 'changed':
             value = stringify_dict(val.get('value1'), deapth)
