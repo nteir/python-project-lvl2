@@ -1,3 +1,3 @@
-from gendiff.formats import stylish
+from gendiff.formats import stylish, plain
 
-__all__ = ('stylish',)
+__all__ = ('stylish', 'plain')
