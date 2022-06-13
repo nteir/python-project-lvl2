@@ -5,13 +5,12 @@ def format(node, path=''):
     for key, val in sorted(node.items()):
         node_type = val.get('type')
         new_path = f"{path}.{key}" if path else key
+        value1 = val.get('value')
+        value1 = val.get('value1') if value1 is None else value1
+        value2 = val.get('value2')
         if node_type == 'parent':
-            value = val.get('value')
-            result += format(value, path=new_path)
-        if node_type in ['removed', 'added', 'changed']:
-            value1 = val.get('value')
-            value1 = val.get('value1') if value1 is None else value1
-            value2 = val.get('value2')
+            result += format(value1, path=new_path)
+        elif node_type in ['removed', 'added', 'changed']:
             result += get_value_string(node_type, new_path, value1, value2)
     return result
 
