@@ -1,13 +1,12 @@
 import os.path
 from gendiff.logic.data_parser import parse_to_dict
 import gendiff.logic.generator
-from gendiff.formats import stylish, plain
+from gendiff.formats import stylish, plain, json
 
-INDENT_CHAR = ' '
-INDENT_REPEAT = 2
 FORMATS = {
     'stylish': stylish,
     'plain': plain,
+    'json': json,
 }
 
 
