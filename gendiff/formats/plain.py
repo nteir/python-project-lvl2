@@ -35,6 +35,8 @@ def cast_type(value):
         result = 'null'
     elif isinstance(value, dict):
         result = '[complex value]'
+    elif isinstance(value, int) or isinstance(value, float):
+        result = f"{value}"
     else:
         result = f"'{value}'"
     return result
