@@ -10,4 +10,4 @@ def parse_to_dict(data, data_type):
     if data_type in PARSING_FUNC:
         return PARSING_FUNC[data_type](data)
     else:
-        return {}
+        raise TypeError('Unsupported data type')
