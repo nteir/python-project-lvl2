@@ -1,31 +1,11 @@
-import os.path
-from gendiff.logic.data_parser import parse_to_dict
+from gendiff.logic.data_parser import get_data_from_file
 import gendiff.logic.generator
-from gendiff.formats import stylish, plain, json
-
-FORMATS = {
-    'stylish': stylish,
-    'plain': plain,
-    'json': json,
-}
-
-
-def get_data(file_path):
-    DATA_TYPES = {
-        '.json': 'json',
-        '.yaml': 'yaml',
-        '.yml': 'yaml'
-    }
-    data_type = DATA_TYPES.get(os.path.splitext(file_path)[-1])
-    if data_type is None:
-        raise TypeError('Unsupported file format')
-    with open(file_path) as input_file:
-        return parse_to_dict(input_file, data_type)
+from gendiff.formats import FORMATS
 
 
 def generate_diff(file_path1, file_path2, format='stylish'):
-    data1 = get_data(file_path1)
-    data2 = get_data(file_path2)
+    data1 = get_data_from_file(file_path1)
+    data2 = get_data_from_file(file_path2)
     diff = gendiff.logic.generator.generate_internal_diff(data1, data2)
     diff_string = FORMATS[format].format(diff)
     diff_string = diff_string.strip()

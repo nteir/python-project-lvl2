@@ -10,26 +10,28 @@ STYLISH_CONST = {
 }
 
 
-def format(node, deapth=0):
-    indent_count = STYLISH_CONST['indent_repeat'] * deapth
-    indent = STYLISH_CONST['indent_char'] * indent_count
-    result = "{\n"
-    for key, val in sorted(node.items()):
-        node_type = val.get('type')
-        if node_type == 'parent':
-            value = val.get('value')    # is dict, has type
-            value = format(value, deapth + 1)
-            result += get_value_string(node_type, key, value, deapth)
-        elif node_type == 'changed':
-            value = stringify_dict(val.get('value1'), deapth)
-            result += get_value_string('removed', key, value, deapth)
-            value = stringify_dict(val.get('value2'), deapth)
-            result += get_value_string('added', key, value, deapth)
-        else:
-            value = stringify_dict(val.get('value'), deapth)
-            result += get_value_string(node_type, key, value, deapth)
-    result += f'{indent}}}'
-    return result
+def format(data):
+    def go_deeper(node, deapth=0):
+        indent_count = STYLISH_CONST['indent_repeat'] * deapth
+        indent = STYLISH_CONST['indent_char'] * indent_count
+        result = "{\n"
+        for key, val in sorted(node.items()):
+            node_type = val.get('type')
+            if node_type == 'parent':
+                value = val.get('value')    # is dict, has type
+                value = go_deeper(value, deapth + 1)
+                result += get_value_string(node_type, key, value, deapth)
+            elif node_type == 'changed':
+                value = stringify_dict(val.get('value1'), deapth)
+                result += get_value_string('removed', key, value, deapth)
+                value = stringify_dict(val.get('value2'), deapth)
+                result += get_value_string('added', key, value, deapth)
+            else:
+                value = stringify_dict(val.get('value'), deapth)
+                result += get_value_string(node_type, key, value, deapth)
+        result += f'{indent}}}'
+        return result
+    return go_deeper(data)
 
 
 def stringify_dict(data, deapth):

@@ -1,17 +1,17 @@
-
-
-def format(node, path=''):
-    result = ''
-    for key, val in sorted(node.items()):
-        node_type = val.get('type')
-        new_path = f"{path}.{key}" if path else key
-        value1 = val.get('value', val.get('value1'))
-        value2 = val.get('value2')
-        if node_type == 'parent':
-            result += format(value1, path=new_path)
-        elif node_type in ['removed', 'added', 'changed']:
-            result += get_value_string(node_type, new_path, value1, value2)
-    return result
+def format(data):
+    def go_deeper(node, path=''):
+        result = ''
+        for key, val in sorted(node.items()):
+            node_type = val.get('type')
+            new_path = f"{path}.{key}" if path else key
+            value1 = val.get('value', val.get('value1'))
+            value2 = val.get('value2')
+            if node_type == 'parent':
+                result += go_deeper(value1, path=new_path)
+            elif node_type in ['removed', 'added', 'changed']:
+                result += get_value_string(node_type, new_path, value1, value2)
+        return result
+    return go_deeper(data)
 
 
 def get_value_string(node_type, path, value1, value2=None):
