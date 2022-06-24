@@ -1,5 +1,3 @@
-
-
 def generate_node(data1, data2, key):
     node = {}
     value1 = data1.get(key)
